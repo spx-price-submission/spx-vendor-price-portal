@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  :root{--navy:#1F2A44;--orange:#EE4D2D;--bg:#F4F6FA;--card:#FFFFFF;--line:#D5DAE3;--muted:#6B7385;--text:#1F2A44;--ok:#00873C;--err:#C00000}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI","Noto Sans Thai",Tahoma,Arial,sans-serif;font-size:15px}
+  header{background:var(--navy);color:#fff;padding:22px 20px 18px;border-bottom:4px solid var(--orange)}
+  header h1{margin:0;font-size:22px;font-weight:700}
+  header p{margin:6px 0 0;color:#C9D1E3;font-size:13px}
+  main{max-width:880px;margin:0 auto;padding:20px 16px 48px}
+  .card{background:var(--card);border-radius:10px;padding:20px;margin-bottom:16px;border:1px solid var(--line)}
+  .card h2{margin:0 0 14px;font-size:15px;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--orange);padding-bottom:8px}
+  label{display:block;font-weight:600;font-size:13px;margin-bottom:4px}
+  label small{font-weight:400;color:var(--muted)}
+  input,select{width:100%;padding:10px 11px;border:1px solid #AEB6C6;border-radius:6px;font:inherit;background:#FFFDF5;color:var(--text)}
+  input:focus,select:focus{outline:2px solid var(--orange);outline-offset:0;border-color:var(--orange)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .line{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px;background:#FAFBFD;position:relative}
+  .line-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;color:var(--navy)}
+  .line-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px}
+  .line-grid2{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;margin-top:12px}
+  .req{color:var(--err);font-weight:700}
+  .invalid{border-color:var(--err)!important;background:#FFF5F5}
+  .remove{background:none;border:none;color:var(--err);font:inherit;font-size:13px;cursor:pointer;padding:4px 6px}
+  .btn{display:inline-block;border:none;border-radius:6px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer}
+  .btn-add{background:#fff;color:var(--navy);border:1.5px dashed #AEB6C6;width:100%}
+  .btn-submit{background:var(--orange);color:#fff;width:100%;font-size:16px;padding:14px}
+  .btn-submit:disabled{opacity:.6;cursor:wait}
+  .msg{border-radius:6px;padding:12px 14px;margin-bottom:14px;font-weight:600;display:none}
+  .msg.err{display:block;background:#FCE4D6;color:var(--err)}
+  .hint{color:var(--muted);font-size:12px;margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+  th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:12px}
+  td.num,th.num{text-align:right}
+  .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;background:#E8E1F5;color:#5B3A9E}
+  .tag.bau{background:#EAF1FB;color:#1F4E9E}
+  .ok-banner{background:#D9F2E3;color:var(--ok);border-radius:8px;padding:16px;font-weight:700;font-size:16px}
+  .hidden{display:none!important}
+  @media (max-width:640px){.grid2,.line-grid,.line-grid2{grid-template-columns:1fr}}
+  @media (max-width:640px){table{font-size:12px}th,td{padding:6px 3px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>SPX Manpower Bidding – Price Submission</h1>
+  <p>Submit your manpower price for each facility · กรอกราคาค่าแรงงานของแต่ละไซต์ · <span id="month"></span></p>
+</header>
+<main>
+  <div id="formView">
+    <div id="error" class="msg"></div>
+
+    <div class="card">
+      <h2>1 · Your company / ข้อมูลบริษัท</h2>
+      <div id="loginBox">
+        <div class="grid2">
+          <div>
+            <label for="vendor">Company name <small>/ ชื่อบริษัท</small> <span class="req">*</span></label>
+            <input id="vendor" type="text" autocomplete="organization" placeholder="As registered with SPX">
+            <div class="hint">Type your company name as given by SPX. / พิมพ์ชื่อบริษัทตามที่แจ้งกับ SPX</div>
+          </div>
+          <div>
+            <label for="code">Access code <small>/ รหัสเข้าใช้</small> <span class="req">*</span></label>
+            <input id="code" type="password" autocomplete="off" placeholder="Provided by SPX">
+            <div class="hint">The code SPX sent to your company. / รหัสที่ได้รับจาก SPX</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-submit" id="verify" style="margin-top:16px">Continue / ดำเนินการต่อ</button>
+      </div>
+      <div id="signedIn" class="hidden" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><span class="hint">Submitting as / ส่งในนาม</span><br><b id="vendorName" style="font-size:18px"></b></div>
+        <button type="button" class="remove" id="change">Not your company? Change / เปลี่ยนบริษัท</button>
+      </div>
+    </div>
+
+    <div id="priceSection" class="hidden">
+    <div class="card">
+      <h2>2 · Prices / ราคา</h2>
+      <p class="hint" style="margin:-4px 0 12px">Fields marked <span class="req">*</span> are required. Quote TH and BM, or 8hr and 10hr, as separate lines. Enter 0 for Max HC if you cannot supply.<br>ช่องที่มี * ต้องกรอก · ราคาแต่ละสัญชาติหรือแต่ละรูปแบบการทำงานให้แยกบรรทัด · ถ้าจัดหาคนไม่ได้ให้ใส่ 0</p>
+      <div id="lines"></div>
+      <button type="button" class="btn btn-add" id="addLine">+ Add another facility / เพิ่มไซต์</button>
+    </div>
+
+    <button type="button" class="btn btn-submit" id="submit">Submit prices / ส่งราคา</button>
+    <p class="hint" style="text-align:center;margin-top:10px">You can submit again later to revise a price – the latest submission is marked as a revision.<br>สามารถส่งใหม่เพื่อแก้ไขราคาได้</p>
+    </div>
+  </div>
+
+  <div id="doneView" class="hidden">
+    <div class="card">
+      <div class="ok-banner">✓ Submitted – thank you / ส่งราคาเรียบร้อย ขอบคุณ</div>
+      <p><b>Reference / เลขอ้างอิง:</b> <span id="ref"></span><br><b>Vendor:</b> <span id="rVendor"></span><br><b>Time:</b> <span id="rWhen"></span></p>
+      <p class="hint">Please keep the reference number. / กรุณาเก็บเลขอ้างอิงไว้</p>
+      <table>
+        <thead><tr><th>Facility</th><th>Nat.</th><th>Scheme</th><th>Type</th><th class="num">No shift (THB)</th><th class="num">With shift (THB)</th><th class="num">Max BAU HC</th><th class="num">Max Camp. HC</th></tr></thead>
+        <tbody id="rLines"></tbody>
+      </table>
+    </div>
+    <button type="button" class="btn btn-submit" id="again">Submit more prices / ส่งราคาเพิ่ม</button>
+  </div>
+</main>
+
+<template id="lineTpl">
+  <div class="line">
+    <div class="line-head"><span class="ln"></span><button type="button" class="remove">Remove / ลบ</button></div>
+    <div class="line-grid">
+      <div><label>Facility <small>/ ไซต์</small> <span class="req">*</span></label><select class="facility" required></select></div>
+      <div><label>Nationality <small>/ สัญชาติ</small> <span class="req">*</span></label>
+        <select class="nationality" required><option value="">Choose… / เลือก…</option><option value="TH">TH – Thai / ไทย</option><option value="BM">BM – Myanmar / เมียนมา</option></select></div>
+      <div><label>Working scheme <small>/ รูปแบบการทำงาน</small> <span class="req">*</span></label>
+        <select class="scheme" required><option value="">Choose… / เลือก…</option><option value="8hr">8 hours / 8 ชั่วโมง</option><option value="10hr">10 hours / 10 ชั่วโมง</option></select></div>
+    </div>
+    <div class="line-grid" style="margin-top:12px">
+      <div><label>Price type <small>/ ประเภทราคา</small> <span class="req">*</span></label>
+        <select class="type" required><option value="BAU">BAU (normal) / ปกติ</option><option value="Campaign">Campaign / แคมเปญ</option></select></div>
+      <div><label>Price without shift (THB) <small>/ ราคาไม่รวมค่ากะ (บาท)</small> <span class="req">*</span></label><input class="price priceNoShift" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 525.00" required></div>
+      <div><label>Price with shift (THB) <small>/ ราคารวมค่ากะ (บาท)</small> <span class="req">*</span></label><input class="price priceShift" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 545.00" required></div>
+    </div>
+    <div class="line-grid2">
+      <div><label>Max BAU HC <small>/ จำนวนคนสูงสุด (ปกติ)</small> <span class="req">*</span></label><input class="hc bauHc" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 50" required></div>
+      <div><label>Max Campaign HC <small>/ จำนวนคนสูงสุด (แคมเปญ)</small> <span class="req">*</span></label><input class="hc campHc" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 80" required></div>
+      <div><label>Remark <small>/ หมายเหตุ</small></label><input class="remark" type="text" maxlength="300" placeholder="optional"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+  var OPTS = {facilities: []};
+  var SESSION = {vendor: '', code: ''};
+  var $ = function (id) { return document.getElementById(id); };
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function fillSelect(sel, items, placeholder) {
+    sel.innerHTML = '<option value="">' + esc(placeholder) + '</option>' +
+      items.map(function (v) { return '<option value="' + esc(v) + '">' + esc(v) + '</option>'; }).join('');
+  }
+
+  function renumber() {
+    var lines = document.querySelectorAll('#lines .line');
+    lines.forEach(function (el, i) {
+      el.querySelector('.ln').textContent = 'Line ' + (i + 1);
+      el.querySelector('.remove').style.visibility = lines.length > 1 ? 'visible' : 'hidden';
+    });
+  }
+
+  function addLine() {
+    var node = $('lineTpl').content.firstElementChild.cloneNode(true);
+    fillSelect(node.querySelector('.facility'), OPTS.facilities, 'Choose… / เลือก…');
+    node.querySelector('.remove').addEventListener('click', function () { node.remove(); renumber(); });
+    var prev = document.querySelector('#lines .line:last-child');
+    if (prev) ['.nationality', '.scheme', '.type'].forEach(function (c) { node.querySelector(c).value = prev.querySelector(c).value; });
+    node.querySelectorAll('select,input').forEach(function (el) {
+      el.addEventListener('input', function () { el.classList.remove('invalid'); });
+      el.addEventListener('change', function () { el.classList.remove('invalid'); });
+    });
+    $('lines').appendChild(node);
+    renumber();
+  }
+
+  function showError(msg) {
+    var e = $('error'); e.textContent = msg; e.className = 'msg err';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function collect() {
+    return {
+      vendor: SESSION.vendor,
+      code: SESSION.code,
+      lines: Array.prototype.map.call(document.querySelectorAll('#lines .line'), function (el) {
+        return {
+          facility: el.querySelector('.facility').value,
+          nationality: el.querySelector('.nationality').value,
+          scheme: el.querySelector('.scheme').value,
+          type: el.querySelector('.type').value,
+          price: el.querySelector('.priceNoShift').value,
+          priceShift: el.querySelector('.priceShift').value,
+          bauHc: el.querySelector('.bauHc').value,
+          campHc: el.querySelector('.campHc').value,
+          remark: el.querySelector('.remark').value
+        };
+      })
+    };
+  }
+
+  function submit() {
+    $('error').className = 'msg';
+    var p = collect();
+    if (!p.vendor) return showError('Please enter your company name and access code first. / กรุณาใส่ชื่อบริษัทและรหัสก่อน');
+    var missing = 0;
+    document.querySelectorAll('#lines [required]').forEach(function (el) {
+      var v = el.value, n = Number(v);
+      var bad = v === '' ||
+        (el.classList.contains('price') && !(n > 0)) ||
+        (el.classList.contains('hc') && !(n >= 0 && Math.floor(n) === n));
+      el.classList.toggle('invalid', bad); if (bad) missing++;
+    });
+    if (missing) return showError('Please complete the fields marked * (highlighted in red). / กรุณากรอกช่องที่มี * ให้ครบ');
+    var btn = $('submit'); btn.disabled = true; btn.textContent = 'Submitting… / กำลังส่ง…';
+    google.script.run
+      .withSuccessHandler(function (r) {
+        btn.disabled = false; btn.textContent = 'Submit prices / ส่งราคา';
+        $('ref').textContent = r.ref; $('rVendor').textContent = r.vendor; $('rWhen').textContent = r.when;
+        $('rLines').innerHTML = r.lines.map(function (l) {
+          return '<tr><td>' + esc(l.facility) + (l.revision ? ' <span class="hint">(revision)</span>' : '') + '</td>' +
+            '<td>' + esc(l.nationality) + '</td><td>' + esc(l.scheme) + '</td>' +
+            '<td><span class="tag ' + (l.type === 'BAU' ? 'bau' : '') + '">' + esc(l.type) + '</span></td>' +
+            '<td class="num">' + Number(l.price).toLocaleString('en-US', {minimumFractionDigits: 2}) + '</td>' +
+            '<td class="num">' + Number(l.priceShift).toLocaleString('en-US', {minimumFractionDigits: 2}) + '</td>' +
+            '<td class="num">' + (l.bauHc === '' ? '–' : l.bauHc) + '</td>' +
+            '<td class="num">' + (l.campHc === '' ? '–' : l.campHc) + '</td></tr>';
+        }).join('');
+        $('formView').classList.add('hidden'); $('doneView').classList.remove('hidden');
+        window.scrollTo({top: 0});
+      })
+      .withFailureHandler(function (err) {
+        btn.disabled = false; btn.textContent = 'Submit prices / ส่งราคา';
+        showError((err && err.message) || 'Something went wrong, please try again. / เกิดข้อผิดพลาด กรุณาลองใหม่');
+      })
+      .submitQuotes(p);
+  }
+
+  function again() {
+    $('lines').innerHTML = ''; addLine();
+    $('doneView').classList.add('hidden'); $('formView').classList.remove('hidden');
+  }
+
+  function verify() {
+    $('error').className = 'msg';
+    var name = $('vendor').value.trim(), code = $('code').value.trim();
+    if (!name || !code) return showError('Please enter your company name and access code. / กรุณาใส่ชื่อบริษัทและรหัสเข้าใช้');
+    var btn = $('verify'); btn.disabled = true; btn.textContent = 'Checking… / กำลังตรวจสอบ…';
+    google.script.run
+      .withSuccessHandler(function (r) {
+        btn.disabled = false; btn.textContent = 'Continue / ดำเนินการต่อ';
+        SESSION = {vendor: r.vendor, code: code};
+        $('vendorName').textContent = r.vendor;
+        $('loginBox').classList.add('hidden'); $('signedIn').classList.remove('hidden');
+        $('priceSection').classList.remove('hidden');
+        if (!document.querySelector('#lines .line')) addLine();
+      })
+      .withFailureHandler(function (err) {
+        btn.disabled = false; btn.textContent = 'Continue / ดำเนินการต่อ';
+        showError((err && err.message) || 'Could not verify. Please try again. / ตรวจสอบไม่สำเร็จ กรุณาลองใหม่');
+      })
+      .verifyVendor(name, code);
+  }
+
+  function changeCompany() {
+    SESSION = {vendor: '', code: ''};
+    $('code').value = ''; $('lines').innerHTML = ''; $('error').className = 'msg';
+    $('signedIn').classList.add('hidden'); $('priceSection').classList.add('hidden'); $('loginBox').classList.remove('hidden');
+    $('vendor').focus();
+  }
+
+  $('verify').addEventListener('click', verify);
+  $('code').addEventListener('keydown', function (e) { if (e.key === 'Enter') verify(); });
+  $('change').addEventListener('click', changeCompany);
+  $('addLine').addEventListener('click', addLine);
+  $('submit').addEventListener('click', submit);
+  $('again').addEventListener('click', again);
+
+  google.script.run
+    .withSuccessHandler(function (o) {
+      OPTS = o;
+      $('month').textContent = o.month;
+      $('vendor').focus();
+    })
+    .withFailureHandler(function () { showError('Could not load the form. Please refresh. / โหลดฟอร์มไม่สำเร็จ กรุณารีเฟรช'); })
+    .getOptions();
+</script>
+</body>
+</html>
