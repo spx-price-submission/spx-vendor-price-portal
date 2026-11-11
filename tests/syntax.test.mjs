@@ -25,6 +25,8 @@ for (const f of ['docs/index.html', 'apps-script/vendor-sheet/WebPage.html', 'ap
   });
 }
 test('docs/index.html and WebPage.html stay identical apart from the config.js tag', () => {
-  const page = read('docs/index.html').replace('<script src="config.js"></script>\n', '');
-  assert.equal(page, read('apps-script/vendor-sheet/WebPage.html'));
+  const web = read('apps-script/vendor-sheet/WebPage.html');
+  assert.ok(!web.includes('config.js'), 'WebPage.html must not reference config.js');
+  const strip = s => s.split('\n').filter(l => !l.includes('config.js')).join('\n');
+  assert.equal(strip(read('docs/index.html')), strip(web));
 });

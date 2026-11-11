@@ -129,7 +129,7 @@
   </div>
 </template>
 
-<script src="config.js"></script>
+<script>/* always load a fresh config.js, never a cached copy; document.write keeps it parser-blocking so CONFIG is ready for the script below */document.write('<script src="config.js?t=' + Date.now() + '"><\/script>');</script>
 <script>
 /*__CONFIG__*/
 if (typeof CONFIG === 'undefined') {   // preview only – the real values are added by "Web Form > 2) Build web page"
