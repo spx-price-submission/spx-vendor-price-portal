@@ -14,7 +14,7 @@ const CFG = {
   DAILY_HOUR: 18,
   DB_SHEET: 'Database', DB_FIRST: 6, DB_LAST: 1005,   // Database rows with formulas
   SYNC_SHEET: 'Sync', SRC_CELL: 'C5', CHECK_CELL: 'C7', LAST_CELL: 'C9', RESULT_CELL: 'C10', LOG_ROW: 15,
-  LISTS_SHEET: 'Lists', VENDOR_RANGE: 'B6:B25', FACILITY_RANGE: 'D6:D35', MONTH_RANGE: 'V6:V29',
+  LISTS_SHEET: 'Lists', VENDOR_RANGE: 'B6:B45', FACILITY_RANGE: 'D6:D35', MONTH_RANGE: 'V6:V29',
   TREND_SHEET: 'Trend', TREND_PAIR_ROWS: 120,          // rows per vendor×facility table on Trend
   SRC_SUBMISSIONS: 'Submissions', SRC_FORM: 'Form Responses', SRC_VENDORS: 'Vendors', SRC_FACILITIES: 'Facilities'
 };

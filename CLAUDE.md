@@ -85,7 +85,7 @@ Max BAU HC, Max Campaign HC, Remark, **Imported At (J)**, Nationality, Working S
 
 **4. Tracker `Database` tab** — `Tracker_Sync.gs` writes columns **C:M** starting row 6 (formula rows end at 1005):
 Date, Vendor, Facility, Nationality, Scheme, **Shift**, Price Type, Price, BAU HC, Campaign HC, Remark.
-Column U = Combo Key (used by `healthCheck_`). Lists tab: vendors `B6:B25`, facilities `D6:D35`,
+Column U = Combo Key (used by `healthCheck_`). Lists tab: vendors `B6:B45`, facilities `D6:D35`,
 targets `E6:T35`, months `V6:V29`, first month `X6`. These are hard-coded in `CFG` at the top of `Tracker_Sync.gs`.
 
 **5. Facility names** are plain site names (`SOCN`, not `SOCN (BM)`); nationality is its own field.
